@@ -8,6 +8,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import { errorMiddleware } from './middlewares/error.middleware.js';
 
 const app = express();
 
@@ -38,6 +39,6 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 // defining routes
 
 // global error config
-app.use();
+app.use(errorMiddleware);
 
 export { app };
