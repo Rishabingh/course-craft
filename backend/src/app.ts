@@ -35,8 +35,10 @@ app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 app.use(express.static(path.join(process.cwd(), 'public')));
 
 // importing routes
+import healthCheckRouter from './routes/healthCheck.route.js';
 
 // defining routes
+app.use('/api/v1/health', healthCheckRouter);
 
 // global error config
 app.use(errorMiddleware);
