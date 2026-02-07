@@ -3,8 +3,11 @@ import { Document } from 'mongoose';
 export interface IUser extends Document {
   username: string;
   email: string;
-  password: string;
+  password?: string;
   role: 'user' | 'admin';
+
+  authProvider: 'local' | 'google';
+  providerId?: string; //google user ID
 
   otp?: string;
   otpExpiry?: Date;

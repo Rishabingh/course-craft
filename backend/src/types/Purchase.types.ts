@@ -6,7 +6,8 @@ export interface IPurchase {
 
   paymentId: string;
 
-  purchasedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   status: 'active' | 'refunded';
 }
