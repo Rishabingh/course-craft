@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema<IUser>(
   {
     username: {
       type: String,
-      required: true,
+      sparse: true,
       unique: true,
       index: true,
     },
@@ -58,7 +58,7 @@ userSchema.methods.verifyPassword = async function (this: IUser, password: strin
   }
 };
 
-userSchema.methods.generateRefreshToken = async function (this: IUser) {
+userSchema.methods.generateRefreshToken = function (this: IUser) {
   if (!process.env.REFRESH_SECRET) throw new Error('app can not run without refresh secret');
   const refreshToken = jwt.sign({ _id: this._id }, process.env.REFRESH_SECRET, {
     expiresIn: '30d',
@@ -67,7 +67,7 @@ userSchema.methods.generateRefreshToken = async function (this: IUser) {
   return refreshToken;
 };
 
-userSchema.methods.generateAccessToken = async function (this: IUser) {
+userSchema.methods.generateAccessToken = function (this: IUser) {
   if (!process.env.ACCESS_SECRET) throw new Error('app can not run without access secret');
   const accessToken = jwt.sign({ _id: this._id }, process.env.ACCESS_SECRET, { expiresIn: '5m' });
   return accessToken;
