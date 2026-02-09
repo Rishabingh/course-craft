@@ -28,5 +28,6 @@ const purchaseSchema = new mongoose.Schema<IPurchase>(
     timestamps: true,
   },
 );
+// purchaseSchema.index({ userId: 1, courseId: 1 }, { unique: true });
 
 export const Purchase = mongoose.model('Purchase', purchaseSchema);

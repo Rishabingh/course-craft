@@ -2,10 +2,17 @@ import { User } from '../models/User.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import type { LoginInput, RegisterInput, VerifyEmailInput } from '../schemas/auth.schema.js';
+import type {
+  LoginInput,
+  RegisterInput,
+  VerifyEmailInput,
+  PasswordChangeInput,
+} from '../schemas/auth.schema.js';
 import { generateRandomUsernameFromEmail } from '../services/randomUsername.service.js';
 import { sendAndSaveOtp } from '../services/otp.services.js';
 import { verifyOtp } from '../services/otp.services.js';
+import { refreshTokenCookieOptions } from '../utils/cookieOptions.js';
+import jwt from 'jsonwebtoken';
 
 const loginController = asyncHandler(async (req, res) => {
   const { identifier, password } = req.body as LoginInput;
@@ -34,12 +41,7 @@ const loginController = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   return res
-    .cookie('refreshToken', refreshToken, {
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-    })
+    .cookie('refreshToken', refreshToken, refreshTokenCookieOptions())
     .status(200)
     .json(new ApiResponse<{ accessToken: string }>(200, { accessToken }, 'login successfully'));
 });
@@ -91,15 +93,10 @@ const verifyEmailController = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   return res
-    .cookie('refreshToken', refreshToken, {
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-    })
+    .cookie('refreshToken', refreshToken, refreshTokenCookieOptions())
     .status(201)
     .json(
-      new ApiResponse<{ accessToken: string }>(201, { accessToken }, 'registeration successfull'),
+      new ApiResponse<{ accessToken: string }>(200, { accessToken }, 'registeration successfull'),
     );
 });
 
@@ -119,13 +116,75 @@ const resendOtpController = asyncHandler(async (req, res) => {
   return res.json(new ApiResponse(200, null, 'OTP resent'));
 });
 
+const refreshTokenController = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (!refreshToken) {
+    throw new ApiError(401, 'Refresh token missing');
+  }
+
+  if (!process.env.REFRESH_SECRET) throw new ApiError(500, 'REFRESH_SECRET missing');
+
+  let decode: { _id: string };
+  try {
+    decode = jwt.verify(refreshToken, process.env.REFRESH_SECRET) as { _id: string };
+  } catch (error) {
+    res.clearCookie('refreshToken', refreshTokenCookieOptions());
+    throw new ApiError(401, 'Invalid or expired refresh token');
+  }
+
+  const userId = decode._id;
+
+  if (!userId) throw new ApiError(401, 'tempered refresh token or its expired');
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new ApiError(401, 'user does not exist');
+
+  const isTokenMatches = refreshToken === user.refreshToken;
+
+  if (!isTokenMatches) throw new ApiError(401, 'invalid refresh token');
+
+  const newRefreshToken = user.genrateRefreshToken();
+  const newAccessToken = user.generateAccessToken();
+  await user.save({ validateBeforeSave: false });
+
+  res
+    .status(200)
+    .cookie('refreshToken', newRefreshToken, refreshTokenCookieOptions())
+    .json(new ApiResponse(200, { accessToken: newAccessToken }, 'token generated'));
+});
+
+const changePasswordController = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body as PasswordChangeInput;
+
+  const user = req.user;
+  if (!user) throw new ApiError(401, 'user missing');
+
+  const isPasswordValid = await user.verifyPassword(oldPassword);
+
+  if (!isPasswordValid) throw new ApiError(401, 'invalid password');
+
+  user.password = newPassword;
+  user.refreshToken = undefined;
+  await user.save();
+
+  res
+    .status(200)
+    .clearCookie('refreshToken', refreshTokenCookieOptions())
+    .json(new ApiResponse(200, {}, 'password changed'));
+});
+
 /*
-register
-verifyEmail
-login
-refreshToken
+register /
+verifyEmail /
+login /
+refreshToken /
 logout
-resendOtp
+resendOtp /
+
+maybe updating password
+and forgetting it
 
 todo do seed:admin
 "scripts": {
@@ -133,4 +192,11 @@ todo do seed:admin
 }
 */
 
-export { loginController, registerController, verifyEmailController, resendOtpController };
+export {
+  loginController,
+  registerController,
+  verifyEmailController,
+  resendOtpController,
+  refreshTokenController,
+  changePasswordController,
+};

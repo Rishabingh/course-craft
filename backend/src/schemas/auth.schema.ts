@@ -32,7 +32,7 @@ export const usernameZodSchema = z.object({
     .regex(/^[a-zA-Z0-9_.]+$/, 'Username can only contain letters, numbers, _ and .'),
 });
 
-export const verifyEmailSchema = z.object({
+export const verifyEmailZodSchema = z.object({
   email: z.string().email('invalid email structure'),
   otp: z
     .string()
@@ -40,7 +40,19 @@ export const verifyEmailSchema = z.object({
     .max(6, 'otp cannot be greater than 6 digits'),
 });
 
+export const passwordChangeZodSchema = z.object({
+  oldPassword: z
+    .string()
+    .min(8, 'password must be atleast 8 characters')
+    .max(50, 'password must be smaller than 50 characters'),
+  newPassword: z
+    .string()
+    .min(8, 'password must be atleast 8 characters')
+    .max(50, 'password must be smaller than 50 characters'),
+});
+
 export type LoginInput = z.infer<typeof loginZodSchema>;
 export type RegisterInput = z.infer<typeof registerZodSchema>;
 export type UsernameInput = z.infer<typeof usernameZodSchema>;
-export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
+export type VerifyEmailInput = z.infer<typeof verifyEmailZodSchema>;
+export type PasswordChangeInput = z.infer<typeof passwordChangeZodSchema>;
