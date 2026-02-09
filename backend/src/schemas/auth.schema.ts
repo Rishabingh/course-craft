@@ -51,6 +51,10 @@ export const passwordChangeZodSchema = z.object({
     .max(50, 'password must be smaller than 50 characters'),
 });
 
+export const resendOtpZodSchema = z.object({
+  email: z.string().email('invalid email structure'),
+});
+
 export type LoginInput = z.infer<typeof loginZodSchema>;
 export type RegisterInput = z.infer<typeof registerZodSchema>;
 export type UsernameInput = z.infer<typeof usernameZodSchema>;

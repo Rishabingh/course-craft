@@ -175,6 +175,15 @@ const changePasswordController = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, 'password changed'));
 });
 
+export {
+  loginController,
+  registerController,
+  verifyEmailController,
+  resendOtpController,
+  refreshTokenController,
+  changePasswordController,
+};
+
 /*
 register /
 verifyEmail /
@@ -191,12 +200,3 @@ todo do seed:admin
   "seed:admin": "tsx scripts/seedAdmin.ts"
 }
 */
-
-export {
-  loginController,
-  registerController,
-  verifyEmailController,
-  resendOtpController,
-  refreshTokenController,
-  changePasswordController,
-};

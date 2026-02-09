@@ -36,9 +36,11 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 
 // importing routes
 import healthCheckRouter from './routes/healthCheck.route.js';
+import authRouter from './routes/auth.routes.js';
 
 // defining routes
 app.use('/api/v1/health', healthCheckRouter);
+app.use('/api/v1/auth', authRouter);
 
 // global error config
 app.use(errorMiddleware);
