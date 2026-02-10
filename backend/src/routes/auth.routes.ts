@@ -15,7 +15,7 @@ import {
   verifyEmailZodSchema,
   passwordChangeZodSchema,
   resendOtpZodSchema,
-} from '../schemas/auth.schema.js';
+} from '../schemas/auth.schemas.js';
 
 const router = Router();
 
@@ -23,9 +23,9 @@ router.route('/login').post(validate(loginZodSchema), loginController);
 router.route('/register').post(validate(registerZodSchema), registerController);
 router.route('/verify-email').post(validate(verifyEmailZodSchema), verifyEmailController);
 router.route('/resend-verify-email-otp').post(validate(resendOtpZodSchema), resendOtpController);
+router.route('/refresh-token').get(verifyJWTmiddleware, refreshTokenController);
 
 // secure routes
-router.route('/refresh-token').get(verifyJWTmiddleware, refreshTokenController);
 router
   .route('/change-password')
   .post(verifyJWTmiddleware, validate(passwordChangeZodSchema), changePasswordController);

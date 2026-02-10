@@ -23,6 +23,6 @@ export interface IUser extends Document {
   updatedAt: Date;
 
   generateAccessToken(): string;
-  genrateRefreshToken(): string;
+  generateRefreshToken(): string;
   verifyPassword(password: string): Promise<boolean>;
 }

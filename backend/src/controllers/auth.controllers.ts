@@ -7,7 +7,7 @@ import type {
   RegisterInput,
   VerifyEmailInput,
   PasswordChangeInput,
-} from '../schemas/auth.schema.js';
+} from '../schemas/auth.schemas.js';
 import { generateRandomUsernameFromEmail } from '../services/randomUsername.service.js';
 import { sendAndSaveOtp } from '../services/otp.services.js';
 import { verifyOtp } from '../services/otp.services.js';
@@ -36,7 +36,7 @@ const loginController = asyncHandler(async (req, res) => {
   }
 
   const accessToken = user.generateAccessToken();
-  const refreshToken = user.genrateRefreshToken();
+  const refreshToken = user.generateRefreshToken();
 
   await user.save({ validateBeforeSave: false });
 
@@ -88,13 +88,13 @@ const verifyEmailController = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError(400, 'user not found');
 
   const accessToken = user.generateAccessToken();
-  const refreshToken = user.genrateRefreshToken();
+  const refreshToken = user.generateRefreshToken();
 
   await user.save({ validateBeforeSave: false });
 
   return res
     .cookie('refreshToken', refreshToken, refreshTokenCookieOptions())
-    .status(201)
+    .status(200)
     .json(
       new ApiResponse<{ accessToken: string }>(200, { accessToken }, 'registeration successfull'),
     );
@@ -145,7 +145,7 @@ const refreshTokenController = asyncHandler(async (req, res) => {
 
   if (!isTokenMatches) throw new ApiError(401, 'invalid refresh token');
 
-  const newRefreshToken = user.genrateRefreshToken();
+  const newRefreshToken = user.generateRefreshToken();
   const newAccessToken = user.generateAccessToken();
   await user.save({ validateBeforeSave: false });
 
