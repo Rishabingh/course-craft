@@ -17,7 +17,8 @@ export interface IUser extends Document {
   forgotPasswordTokenExpiry?: Date;
 
   emailVerified: boolean;
-  accountDeleted: boolean;
+  deletedAt: Date | null;
+  isBlocked: boolean;
 
   createdAt: Date;
   updatedAt: Date;

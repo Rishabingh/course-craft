@@ -38,11 +38,13 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 import healthCheckRouter from './routes/healthCheck.route.js';
 import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
+import adminRouter from './routes/admin.routes.js';
 
 // defining routes
 app.use('/api/v1/health', healthCheckRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
+app.use('api/v1/admin', adminRouter);
 
 // global error config
 app.use(errorMiddleware);

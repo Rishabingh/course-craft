@@ -20,7 +20,7 @@ const courseSchema = new mongoose.Schema<ICourse>({
   price: {
     type: Number,
   },
-  public: {
+  isPublished: {
     type: Boolean,
     default: false,
   },

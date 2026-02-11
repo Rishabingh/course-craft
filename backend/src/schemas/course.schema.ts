@@ -26,7 +26,7 @@ export const CourseZodSchema = z
       .nonnegative('Price cannot be negative')
       .max(100000, 'Price excceeds allowed limit'),
 
-    public: z.boolean(),
+    isPublished: z.boolean(),
     accessType: z.enum(['FREE_OPEN', 'FREE_LOGIN', 'PAID']),
   })
   .refine((data) => (data.accessType === 'PAID' ? data.price > 0 : data.price === 0), {

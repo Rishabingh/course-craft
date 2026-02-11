@@ -38,8 +38,18 @@ const userSchema = new mongoose.Schema<IUser>(
     refreshToken: String,
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
-    emailVerified: Boolean,
-    accountDeleted: Boolean,
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
