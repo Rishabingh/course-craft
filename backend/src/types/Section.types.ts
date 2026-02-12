@@ -1,4 +1,7 @@
-import type { SectionInput } from '../schemas/section.schema.js';
-import type { Document } from 'mongoose';
+import { Types } from 'mongoose';
 
-export interface ISection extends Document {}
+export interface ISection {
+  course: Types.ObjectId;
+  name: string;
+  index: number;
+}

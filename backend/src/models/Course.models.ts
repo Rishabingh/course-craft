@@ -14,9 +14,6 @@ const courseSchema = new mongoose.Schema<ICourse>({
   description: {
     type: String,
   },
-  descriptionMdFile: {
-    type: String,
-  },
   price: {
     type: Number,
   },

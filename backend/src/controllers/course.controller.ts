@@ -18,8 +18,12 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { cloudinaryUpload } from '../services/cloudinaryUpload.js';
 import { Course } from '../models/Course.models.js';
+import { SectionInput } from '../schemas/section.schema.js';
+import mongoose from 'mongoose';
+import { Section } from '../models/Section.models.js';
+import { ICourse } from '../types/Course.types.js';
 
-export const createCourseController = asyncHandler(async (req, res) => {
+const createCourseController = asyncHandler(async (req, res) => {
   const { title, description, price, isPublished, accessType } = req.body as CourseInput;
   const image = req.file;
   let imageUrl: string | undefined;
@@ -40,3 +44,55 @@ export const createCourseController = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(201, { course }, 'course create successfully'));
   }
 });
+
+const createSectionController = asyncHandler(async (req, res) => {
+  const { course, name, index } = req.body as SectionInput;
+  if (!mongoose.isValidObjectId(course)) throw new ApiError(400, 'invalid course id');
+  const section = await Section.create({
+    course,
+    name,
+    index,
+  });
+
+  return res.status(201).json(new ApiResponse(201, section, 'section created successfully'));
+});
+
+const getCourseController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!id) throw new ApiError(400, 'id is required to pass');
+  if (!mongoose.isValidObjectId(id)) throw new ApiError(400, 'invalid course id');
+
+  let course: ICourse | null;
+  if (req.user?.role === 'admin') {
+    course = await Course.findOne({ _id: id }).lean();
+  } else {
+    course = await Course.findOne({ _id: id, isPublished: true }).lean();
+  }
+  if (!course) throw new ApiError(404, 'Course not found');
+  res.status(200).json(new ApiResponse(200, course, 'course fetch successfully'));
+});
+
+const getAllCourseController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!id) throw new ApiError(400, 'id is required to pass');
+  if (!mongoose.isValidObjectId(id)) throw new ApiError(400, 'invalid course id');
+
+  let courses: ICourse[] | null;
+  if (req.user?.role === 'admin') {
+    courses = await Course.find().lean();
+  } else {
+    courses = await Course.find({ isPublished: true }).lean();
+  }
+  if (!courses) throw new ApiError(404, 'Course not found');
+  res.status(200).json(new ApiResponse(200, courses, 'course fetch successfully'));
+});
+
+const createVideoController = asyncHandler(async (req, res) => {});
+
+export {
+  createCourseController,
+  createSectionController,
+  getCourseController,
+  createVideoController,
+  getAllCourseController,
+};
