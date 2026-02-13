@@ -18,9 +18,7 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { cloudinaryUpload } from '../services/cloudinaryUpload.js';
 import { Course } from '../models/Course.models.js';
-import { SectionInput } from '../schemas/section.schema.js';
 import mongoose from 'mongoose';
-import { Section } from '../models/Section.models.js';
 import { ICourse } from '../types/Course.types.js';
 
 const createCourseController = asyncHandler(async (req, res) => {

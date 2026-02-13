@@ -5,6 +5,7 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 import { cloudinaryUpload } from '../services/cloudinaryUpload.js';
 import { Video } from '../models/Video.models.js';
 import mongoose from 'mongoose';
+import { Section } from '../models/Section.models.js';
 
 interface MulterFiles {
   thumbnail?: Express.Multer.File[];
@@ -14,6 +15,19 @@ interface MulterFiles {
 const createVideoController = asyncHandler(async (req, res) => {
   const { title, section, index } = req.body as VideoInput;
   const files = req.files as MulterFiles;
+
+  if (!mongoose.isValidObjectId(section)) {
+    throw new ApiError(400, 'Invalid section id');
+  }
+
+  const sectionExists = await Section.findOne({
+    _id: section,
+    isDeleted: false,
+  });
+
+  if (!sectionExists) {
+    throw new ApiError(404, 'Section not found');
+  }
 
   const thumbnail = files.thumbnail?.[0];
   const video = files.video?.[0];
@@ -68,8 +82,10 @@ const getVideoOfSectionController = asyncHandler(async (req, res) => {
 
 const getVideoController = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  if (!videoId) throw new ApiError(400, 'video is should be in param');
-  const video = await Video.findById(videoId).lean();
+  if (!videoId || !mongoose.isValidObjectId(videoId as string)) {
+    throw new ApiError(400, 'Invalid section id');
+  }
+  const video = await Video.findOne({ _id: videoId, isDeleted: false }).lean();
   if (!video) throw new ApiError(404, 'video not found');
   res.status(200).json(new ApiResponse(200, video, 'video fetch successfully'));
 });
