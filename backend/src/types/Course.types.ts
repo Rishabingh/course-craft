@@ -5,4 +5,5 @@ export interface ICourse extends CourseInput, Document {
   createdAt: Date;
   updatedAt: Date;
   thumbnail: string;
+  isDeleted: boolean;
 }

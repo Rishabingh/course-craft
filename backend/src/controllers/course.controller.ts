@@ -45,18 +45,6 @@ const createCourseController = asyncHandler(async (req, res) => {
   }
 });
 
-const createSectionController = asyncHandler(async (req, res) => {
-  const { course, name, index } = req.body as SectionInput;
-  if (!mongoose.isValidObjectId(course)) throw new ApiError(400, 'invalid course id');
-  const section = await Section.create({
-    course,
-    name,
-    index,
-  });
-
-  return res.status(201).json(new ApiResponse(201, section, 'section created successfully'));
-});
-
 const getCourseController = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) throw new ApiError(400, 'id is required to pass');
@@ -87,12 +75,4 @@ const getAllCourseController = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, courses, 'course fetch successfully'));
 });
 
-const createVideoController = asyncHandler(async (req, res) => {});
-
-export {
-  createCourseController,
-  createSectionController,
-  getCourseController,
-  createVideoController,
-  getAllCourseController,
-};
+export { createCourseController, getCourseController, getAllCourseController };

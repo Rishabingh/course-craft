@@ -21,6 +21,10 @@ const sectionSchema = new mongoose.Schema<ISection>(
       min: [0, 'Index cannot be negative'],
       max: [40, 'One course can have maximum 40 sections'],
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

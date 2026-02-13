@@ -26,6 +26,10 @@ const courseSchema = new mongoose.Schema<ICourse>({
     enum: ['FREE_OPEN', 'FREE_LOGIN', 'PAID'],
     default: 'FREE_OPEN',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const Course = mongoose.model('Course', courseSchema);
