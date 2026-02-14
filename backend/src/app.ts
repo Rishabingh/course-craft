@@ -37,13 +37,19 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 import healthCheckRouter from './routes/healthCheck.route.js';
 import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
-import adminRouter from './routes/admin.routes.js';
+import statsRouter from './routes/stats.routes.js';
+import courseRouter from './routes/course.routes.js';
+import sectionRouter from './routes/section.routes.js';
+import videoRouter from './routes/video.routes.js';
 
 // defining routes
 app.use('/health', healthCheckRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/admin', adminRouter);
+app.use('/api/v1/stats', statsRouter);
+app.use('/api/v1/course', courseRouter);
+app.use('/api/v1/section', sectionRouter);
+app.use('/api/v1/video', videoRouter);
 
 app.get('/', (req, res) => {
   res.status(200).json({
