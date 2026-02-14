@@ -5,6 +5,7 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { Section } from '../models/Section.models.js';
 import { Course } from '../models/Course.models.js';
+import { Video } from '../models/Video.models.js';
 
 const createSectionController = asyncHandler(async (req, res) => {
   const { course, name, index } = req.body as SectionInput;
@@ -30,13 +31,16 @@ const createSectionController = asyncHandler(async (req, res) => {
 
 const deleteSectionController = asyncHandler(async (req, res) => {
   const { sectionId } = req.params;
-  if (!sectionId) throw new ApiError(400, 'bad request');
 
-  if (!mongoose.isValidObjectId(sectionId)) throw new ApiError(400, 'invalid id');
+  if (!sectionId || !mongoose.isValidObjectId(sectionId))
+    throw new ApiError(400, 'provide a valid id');
+  const section = await Section.findOne({ _id: sectionId });
+  if (!section) throw new ApiError(404, 'section not found');
 
-  const section = await Section.findByIdAndUpdate(sectionId, { isDeleted: true }, { new: true });
+  section.isDeleted = true;
+  await section.save({ validateBeforeSave: false });
 
-  if (!section) throw new ApiError(404, 'Section not found');
+  await Video.updateMany({ section: section._id }, { isDeleted: true });
 
   res.status(200).json(new ApiResponse(200, section, 'deleted successfully'));
 });

@@ -20,6 +20,8 @@ import { cloudinaryUpload } from '../services/cloudinaryUpload.js';
 import { Course } from '../models/Course.models.js';
 import mongoose from 'mongoose';
 import { ICourse } from '../types/Course.types.js';
+import { Section } from '../models/Section.models.js';
+import { Video } from '../models/Video.models.js';
 
 const createCourseController = asyncHandler(async (req, res) => {
   const { title, description, price, isPublished, accessType } = req.body as CourseInput;
@@ -73,4 +75,29 @@ const getAllCourseController = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, courses, 'course fetch successfully'));
 });
 
-export { createCourseController, getCourseController, getAllCourseController };
+const deleteCourseController = asyncHandler(async (req, res) => {
+  const { courseId } = req.params;
+
+  if (!courseId || !mongoose.isValidObjectId(courseId))
+    throw new ApiError(400, 'provide a valid id');
+
+  const course = await Course.findOne({ _id: courseId, isDeleted: false });
+  if (!course) throw new ApiError(404, 'course not found');
+  course.isDeleted = true;
+  course.save({ validateBeforeSave: false });
+
+  await Section.updateMany({ course: courseId }, { isDeleted: true });
+  const sections = await Section.find({ course: courseId });
+
+  const sectionsId = sections.map((section) => section._id);
+  await Video.updateMany({ section: { $in: sectionsId } }, { isDeleted: true });
+
+  res.status(200).json(new ApiResponse(200, course, 'deleted successfully'));
+});
+
+export {
+  createCourseController,
+  getCourseController,
+  getAllCourseController,
+  deleteCourseController,
+};
