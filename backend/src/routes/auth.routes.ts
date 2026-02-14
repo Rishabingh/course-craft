@@ -23,7 +23,7 @@ router.route('/login').post(validate(loginZodSchema), loginController);
 router.route('/register').post(validate(registerZodSchema), registerController);
 router.route('/verify-email').post(validate(verifyEmailZodSchema), verifyEmailController);
 router.route('/resend-verify-email-otp').post(validate(resendOtpZodSchema), resendOtpController);
-router.route('/refresh-token').get(verifyJWTmiddleware, refreshTokenController);
+router.route('/refresh-token').get(refreshTokenController);
 
 // secure routes
 router

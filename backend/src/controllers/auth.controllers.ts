@@ -21,10 +21,12 @@ const loginController = asyncHandler(async (req, res) => {
     $or: [{ email: identifier }, { username: identifier }],
   });
 
-  if (!user || !user.emailVerified) {
-    throw new ApiError(401, 'Invalid credentials', [
-      { field: 'identifier', message: 'Invalid username or email' },
-    ]);
+  if (!user) {
+    throw new ApiError(401, 'Invalid credentials');
+  }
+
+  if (!user.emailVerified) {
+    throw new ApiError(403, 'email not verified register again with same email');
   }
 
   const isPasswordCorrect = await user.verifyPassword(password);

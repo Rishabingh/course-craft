@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const courseSectionZodSchema = z.object({
+export const courseSectionZodSchema = z.object({
   course: z.string('course id must be present'),
   name: z
     .string('name should be string')

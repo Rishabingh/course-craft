@@ -5,8 +5,7 @@ export const loginZodSchema = z.object({
     .string()
     .trim()
     .min(2, 'Username or email must be longer than 3 characters')
-    .max(254, 'Username or Email too long')
-    .regex(/^[a-zA-Z0-9_.]+$/, 'Username can only contain letters, numbers, _ and .'),
+    .max(254, 'Username or Email too long'),
 
   password: z
     .string()

@@ -7,7 +7,7 @@ const startServer = async () => {
 
     const port = Number(process.env.PORT) || 3000;
 
-    app.listen(3000, () => {
+    app.listen(port, () => {
       console.log(`app is listening at http://localhost:${port}/`);
     });
   } catch (error) {

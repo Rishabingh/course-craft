@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-
 dotenv.config({
   path: './.env',
 });
@@ -41,10 +40,21 @@ import userRouter from './routes/user.routes.js';
 import adminRouter from './routes/admin.routes.js';
 
 // defining routes
-app.use('/api/v1/health', healthCheckRouter);
+app.use('/health', healthCheckRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
-app.use('api/v1/admin', adminRouter);
+app.use('/api/v1/admin', adminRouter);
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    name: 'Course Platform API',
+    version: 'v1',
+    status: 'running',
+    docs: '/docs',
+    health: '/health',
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // global error config
 app.use(errorMiddleware);
