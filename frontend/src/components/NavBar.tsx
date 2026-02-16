@@ -1,45 +1,74 @@
 import { Link } from 'react-router';
 import { CgProfile } from 'react-icons/cg';
+import { FiSearch } from 'react-icons/fi'; // Added a search icon for polish
+
 type UserState = {
   isLoggedIn: boolean;
   isAdmin: boolean;
 };
+
 export default function NavBar({ userState }: { userState: UserState }) {
   const { isLoggedIn, isAdmin } = userState;
 
-  let list: {text: string, route: string};
-  if (isAdmin) {
-    list = {text: 'Admin Pannel', route: '/admin'};
-  } else if (isLoggedIn) {
-    list = {text: 'My Courses', route: '/my-courses'};
-  } else {
-    list = {text: 'Login Now', route: '/login'};
-  }
+  // Determine the primary action button content
+  const getAuthAction = () => {
+    if (isAdmin) return { text: 'Admin Panel', route: '/admin', style: 'primary' };
+    if (isLoggedIn) return { text: 'My Courses', route: '/my-courses', style: 'secondary' };
+    return { text: 'Login', route: '/login', style: 'primary' };
+  };
+
+  const action = getAuthAction();
+
   return (
-    <nav className="flex justify-between px-4 items-center h-16 shadow-lg gap-16">
-      <div className="text-indigo-600 text-xl font-bold font-mono">Course-Craft</div>
-      <div className="flex-1">
-        <input
-          type="text"
-          placeholder="Search for Course"
-          className="w-full py-2 px-4 rounded-2xl ring-1 focus:ring-2 focus:ring-indigo-500 outline-none"
-        />
-      </div>
-      <ul className="flex gap-10 items-center">
-        <li>
-          <Link to={'/'}>Home</Link>
-        </li>
-        <li className={!isLoggedIn ? 'bg-indigo-600 text-white px-2 py-1 rounded-md' : ''}>
-          <Link to={list.route}>{list.text}</Link>
-        </li>
-        {isLoggedIn && (
+    // Added sticky top-0 and z-50 so navbar stays visible while scrolling
+    <nav className="sticky top-0 z-50 bg-white border-b border-neutral-200 h-16">
+      <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between gap-8">
+        
+        {/* 1. Logo - Wrapped in Link */}
+        <Link to="/" className="text-indigo-600 text-xl font-bold font-mono tracking-tighter hover:opacity-80 transition-opacity">
+          CourseCraft
+        </Link>
+
+        {/* 2. Search Bar - Added max-w-md to prevent it from stretching too wide */}
+        <div className="flex-1 max-w-md hidden md:block">
+          <div className="relative group">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-indigo-500 transition-colors" />
+            <input
+              type="text"
+              placeholder="What do you want to learn?"
+              className="w-full py-2 pl-10 pr-4 bg-neutral-100 rounded-full border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
+            />
+          </div>
+        </div>
+
+        {/* 3. Navigation Links */}
+        <ul className="flex items-center gap-6">
+          {/* Removed explicit "Home" link (Logo handles this) */}
+          
+          {/* The Action Button */}
           <li>
-            <Link to={'/me'}>
-              <CgProfile className="text-2xl" />
+            <Link 
+              to={action.route}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                action.style === 'primary' 
+                  ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm' 
+                  : 'text-neutral-600 hover:text-indigo-600 hover:bg-neutral-50'
+              }`}
+            >
+              {action.text}
             </Link>
           </li>
-        )}
-      </ul>
+
+          {/* Profile Icon - Only if logged in */}
+          {isLoggedIn && (
+            <li>
+              <Link to="/me" className="text-neutral-600 hover:text-indigo-600 transition-colors">
+                <CgProfile className="text-2xl" />
+              </Link>
+            </li>
+          )}
+        </ul>
+      </div>
     </nav>
   );
 }
