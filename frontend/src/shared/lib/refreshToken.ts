@@ -11,7 +11,7 @@ interface RefreshTokenResponse {
 
 export const refreshToken = async () => {
   try {
-    const response = await unProtectedInstance.get<RefreshTokenResponse>('/api/v1/auth/refresh-token');
+    const response = await unProtectedInstance.get<RefreshTokenResponse>('/auth/refresh-token');
     return response.data.data.accessToken;
   } catch (error) {
     console.log(error);

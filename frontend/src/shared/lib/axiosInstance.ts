@@ -1,5 +1,5 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
-import { useTokenStore } from "../store";
+import { useTokenStore } from "../../store";
 import { refreshToken } from "./refreshToken";
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -7,12 +7,12 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 export const unProtectedInstance = axios.create({
-  baseURL: 'http://localhost:5173/',
+  baseURL: 'http://localhost:5173/api/v1',
   withCredentials: true,
 });
 
 export const protectedInstance = axios.create({
-  baseURL: 'http://localhost:5173/',
+  baseURL: 'http://localhost:5173/api/v1',
   withCredentials: true,
 });
 

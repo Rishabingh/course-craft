@@ -1,12 +1,13 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import HomeLayout from './layouts/HomeLayout';
-import HomePage from './pages/HomePage';
-import MyCoursePage from './pages/MyCoursePage';
-import CoursePage from './pages/CoursePage';
-import NotFoundPage from './pages/NotFoundPage';
-import AuthLayout from './layouts/AuthLayout';
-import LoginPage from './pages/LoginPage';
+import HomeLayout from './features/courses/HomeLayout';
+import HomePage from './features/courses/pages/HomePage';
+import MyCoursePage from './features/courses/pages/MyCoursePage';
+import CoursePage from './features/courses/pages/CoursePage';
+import NotFoundPage from './shared/pages/NotFoundPage';
+import AuthLayout from './features/auth/AuthLayout';
+import LoginPage from './features/auth/pages/LoginPage';
+import AdminLayout from './features/admin/AdminLayout';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,9 @@ const router = createBrowserRouter(
       </Route>
       <Route element={<AuthLayout />}>
         <Route path='/login' element={<LoginPage />} />
+      </Route>
+      <Route element={<AdminLayout />}>
+        <Route path='/admin' element={<LoginPage />} />
       </Route>
 
       <Route path='*' element={<NotFoundPage />} />

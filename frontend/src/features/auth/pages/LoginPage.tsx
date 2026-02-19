@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import LoginCard from "../components/LoginCard";
-import { useTokenStore } from "../store";
+import { useTokenStore } from "../../../store";
 
 export default function LoginPage() {
 //const accessToken = useTokenStore((state) => state.accessToken);
