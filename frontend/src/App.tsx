@@ -11,6 +11,7 @@ import AdminLayout from './features/admin/AdminLayout';
 import DashboardPage from './features/admin/pages/Dashboard';
 import Users from './features/admin/pages/Users';
 import UserDetails from './features/admin/pages/UserDetails';
+import AdminCoursePage from './features/admin/pages/AdminCoursePage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
         <Route path='/admin' element={<DashboardPage />} />
         <Route path='/admin/users' element={<Users />} />
         <Route path='/admin/users/:id' element={<UserDetails />} />
+        <Route path='/admin/courses' element={<AdminCoursePage />} />
       </Route>
 
       <Route path='*' element={<NotFoundPage />} />
