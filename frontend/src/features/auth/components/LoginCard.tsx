@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { LoginInput } from '../schemas/LoginInput.schema';
-import { loginInputSchema } from '../schemas/LoginInput.schema';
+import type { LoginInput } from '../schema/LoginInput.schema';
+import { loginInputSchema } from '../schema/LoginInput.schema';
 import { useId } from 'react';
 import { Link } from 'react-router';
 
