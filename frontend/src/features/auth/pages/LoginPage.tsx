@@ -8,6 +8,7 @@ const setToken = useTokenStore((state) => state.setToken);
 
 useEffect(() => {
   setToken('hello555');
+  // placeholders 
 }, [setToken])
   return (
     <div>

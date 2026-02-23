@@ -4,23 +4,52 @@ import type { LoginInput } from '../schema/LoginInput.schema';
 import { loginInputSchema } from '../schema/LoginInput.schema';
 import { useId } from 'react';
 import { Link } from 'react-router';
-
+import { useLogin } from '../hooks/useLogin';
+import { AxiosError } from 'axios';
+import type { ApiError } from '../../../shared/types/ApiError';
+import toast from 'react-hot-toast';
 export default function LoginCard() {
   const {
     register,
     handleSubmit,
-    //setError,
+    setError,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginInputSchema),
   });
+  const { mutateAsync: loginMutation } = useLogin();
 
-  const onSubmit = async() => {
-    setTimeout(() => {
-      console.log('submitted');
-      reset();
-    }, 3000)
+  const onSubmit = async(data: LoginInput) => {
+    try {
+       await loginMutation(data);
+       reset()
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const axiosError = err as AxiosError<ApiError>;
+        const apiResponse = axiosError.response?.data;
+
+        if (apiResponse?.errors && apiResponse.errors.length > 0) {
+          apiResponse.errors.forEach((e) => {
+            setError(e.field as 'identifier' | 'password' | 'root', {
+              type: 'server',
+              message: e.message
+            })
+          })
+        } else if (apiResponse?.message) {
+          setError('root', {
+            type: 'server',
+            message: apiResponse.message,
+          })
+        }
+      } else {
+        setError('root', {
+          type: 'server',
+          message: 'an unexpected network error occured'
+        })
+      }
+      toast.error('login failed')
+    }
   };
   const identifierId = useId();
   const passwordId = useId();
@@ -66,7 +95,7 @@ export default function LoginCard() {
           <button 
           className={`${isSubmitting ? 'bg-neutral-500' : 'bg-neutral-800'} text-center text-neutral-100 w-full rounded-2xl py-2 cursor-pointer`}
           type='submit' disabled={isSubmitting}>{isSubmitting ? "Logging in..." : "Login"}</button>
-          <div className='min-h-5'>
+          <div className='min-h-5 flex items-center'>
             {errors.root && <p className="text-red-500">{errors.root.message}</p>}
           </div>
         </div>

@@ -7,7 +7,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 export const unProtectedInstance = axios.create({
-  baseURL: 'http://localhost:5173/api/v1',
+  baseURL: 'http://localhost:8000/api/v1',
   withCredentials: true,
 });
 

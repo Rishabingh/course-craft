@@ -12,6 +12,7 @@ import DashboardPage from './features/admin/pages/Dashboard';
 import Users from './features/admin/pages/Users';
 import UserDetails from './features/admin/pages/UserDetails';
 import AdminCoursePage from './features/admin/pages/AdminCoursePage';
+import AnalyticsPage from './features/admin/pages/AnalyticsPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
         <Route path='/admin/users' element={<Users />} />
         <Route path='/admin/users/:id' element={<UserDetails />} />
         <Route path='/admin/courses' element={<AdminCoursePage />} />
+        <Route path='/admin/analytics' element={<AnalyticsPage />} />
       </Route>
 
       <Route path='*' element={<NotFoundPage />} />

@@ -4,7 +4,7 @@ import NavBar from './components/NavBar';
 export default function HomeLayout() {
   return (
     <div className="w-full min-h-screen bg-neutral-100 text-neutral-900">
-      <NavBar userState={{isLoggedIn: true, isAdmin: false}} />
+      <NavBar userState={{isLoggedIn: true, isAdmin: true}} />
       {<Outlet />}
     </div>
   )
