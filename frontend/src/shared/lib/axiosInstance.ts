@@ -12,7 +12,7 @@ export const unProtectedInstance = axios.create({
 });
 
 export const protectedInstance = axios.create({
-  baseURL: 'http://localhost:5173/api/v1',
+  baseURL: 'http://localhost:8000/api/v1',
   withCredentials: true,
 });
 
@@ -37,7 +37,7 @@ protectedInstance.interceptors.response.use(
       try {
         const accessToken = await refreshToken();
         useTokenStore.getState().setToken(accessToken);
-        protectedInstance(orignalRequest);
+        return protectedInstance(orignalRequest);
       } catch (error) {
         console.log(error);
         useTokenStore.getState().clearToken();

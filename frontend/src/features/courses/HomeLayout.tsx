@@ -1,14 +1,15 @@
 import { Outlet } from 'react-router';
 import NavBar from './components/NavBar';
 import { useUser } from '../../shared/hooks/useUser';
-import { useState } from 'react';
 
 export default function HomeLayout() {
-  const { data, isLoading } = useUser();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  if (data) setIsLoggedIn(true);
-  if (data?.role === 'admin') setIsAdmin(true);
+  const { data, isLoading, } = useUser();
+  const isLoggedIn = !!data;
+  let isAdmin: boolean = false;
+  if (data) {
+    isAdmin = data.role === 'admin'
+  }
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
