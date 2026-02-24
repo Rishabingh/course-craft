@@ -9,8 +9,8 @@ import { User } from '../models/User.model.js';
 
 const meController = asyncHandler(async (req, res) => {
   const user = req.user;
-  if (!user || !user.deletedAt) throw new ApiError(404, 'user not found');
-  if (!user.isBlocked) throw new ApiError(400, 'user is blocked');
+  if (!user || user.deletedAt) throw new ApiError(404, 'user not found');
+  if (user.isBlocked) throw new ApiError(400, 'user is blocked');
 
   const responseUser = {
     username: user.username,
@@ -75,32 +75,44 @@ const deleteUserController = asyncHandler(async (req, res) => {
 });
 
 const getAllUsersController = asyncHandler(async (req, res) => {
-  const limit = Number(req.query.limit) || 10;
-  const { lastId } = req.query;
+  const limit = Math.min(Number(req.query.limit) || 10, 50);
+  const { lastCursor } = req.query;
 
-  if (limit > 50) throw new ApiError(400, 'limit too large');
+  let query: any = {};
 
-  let query: any = {
-    deletedAt: null,
-  };
-
-  if (lastId) {
-    if (!mongoose.Types.ObjectId.isValid(lastId as string)) {
+  if (lastCursor) {
+    if (!mongoose.Types.ObjectId.isValid(lastCursor as string)) {
       throw new ApiError(400, 'invalid lastId');
     }
-    query._id = { $gt: lastId };
+    query._id = { $gt: lastCursor };
   }
 
   const users = await User.find(query)
-    .select('-password -refreshToken')
+    .select(
+      '-password -refreshToken -providerId -otp -otpExpiry -forgotPasswordToken -forgotPasswordTokenExpiry',
+    )
     .sort({ _id: 1 })
-    .limit(limit)
+    .limit(limit + 1)
     .lean();
 
-  const lastUser = users.at(-1);
-  const nextCursor = lastUser ? lastUser._id : null;
+  let nextCursor = null;
+  let hasMore = false;
 
-  res.status(200).json(new ApiResponse(200, { users, nextCursor }, 'users fetched successfully'));
+  if (users.length > limit) {
+    hasMore = true;
+    nextCursor = users[limit]?._id;
+    users.pop();
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { users, pagination: { hasMore, nextCursor } },
+        'users fetched successfully',
+      ),
+    );
 });
 
 const searchUserController = asyncHandler(async (req, res) => {

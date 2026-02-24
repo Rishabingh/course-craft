@@ -21,7 +21,7 @@ router.route('/:identifier').get(verifyJWTmiddleware, verifyAdmin, searchUserCon
 router.route('/:userId/block').patch(verifyJWTmiddleware, verifyAdmin, blockUserController); // only admin can block
 router.route('/me/courses').get(verifyJWTmiddleware, meCourseController);
 router.route('/:userId').delete(verifyJWTmiddleware, verifyAdmin, deleteUserController); //admin only delete
-router.route('/me/:userId').delete(/* todo: make user only delete */);
+//router.route('/me/:userId').delete(/* todo: make user only delete */);
 router
   .route('/change-username')
   .post(verifyJWTmiddleware, validate(usernameZodSchema), changeUsername);

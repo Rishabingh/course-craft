@@ -29,7 +29,7 @@ const loginController = asyncHandler(async (req, res) => {
     throw new ApiError(403, 'email not verified register again with same email');
   }
 
-  if (!user.deletedAt || !user.isBlocked)
+  if (user.deletedAt || user.isBlocked)
     throw new ApiError(400, 'cannot login account is blocked or deleted');
 
   const isPasswordCorrect = await user.verifyPassword(password);

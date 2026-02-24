@@ -23,8 +23,8 @@ const courseSchema = new mongoose.Schema<ICourse>({
   },
   accessType: {
     type: String,
-    enum: ['FREE_OPEN', 'FREE_LOGIN', 'PAID'],
-    default: 'FREE_OPEN',
+    enum: ['FREE', 'PAID'],
+    default: 'FREE',
   },
   isDeleted: {
     type: Boolean,

@@ -14,13 +14,13 @@ export const CourseZodSchema = z
       .max(2000, 'Description is too long')
       .trim(),
     // implement description md file later
-    price: z
+    price: z.coerce
       .number()
       .nonnegative('Price cannot be negative')
       .max(100000, 'Price excceeds allowed limit'),
 
-    isPublished: z.boolean(),
-    accessType: z.enum(['FREE_OPEN', 'FREE_LOGIN', 'PAID']),
+    isPublished: z.coerce.boolean(),
+    accessType: z.enum(['FREE', 'PAID']),
   })
   .refine((data) => (data.accessType === 'PAID' ? data.price > 0 : data.price === 0), {
     message: 'Free courses must have price 0, paid course must have price > 0',
