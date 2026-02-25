@@ -11,8 +11,9 @@ import AdminLayout from './features/admin/AdminLayout';
 import DashboardPage from './features/admin/pages/Dashboard';
 import Users from './features/admin/pages/Users';
 import UserDetails from './features/admin/pages/UserDetails';
-import AdminCoursePage from './features/admin/pages/AdminCoursePage';
+import AdminCoursePage from './features/courses/pages/AdminCoursePage';
 import AnalyticsPage from './features/admin/pages/AnalyticsPage';
+import CreateCoursePage from './features/courses/pages/CreateCoursePage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
         <Route path='/admin/users' element={<Users />} />
         <Route path='/admin/users/:id' element={<UserDetails />} />
         <Route path='/admin/courses' element={<AdminCoursePage />} />
+        <Route path='/admin/courses/new' element={<CreateCoursePage />} />
         <Route path='/admin/analytics' element={<AnalyticsPage />} />
       </Route>
 

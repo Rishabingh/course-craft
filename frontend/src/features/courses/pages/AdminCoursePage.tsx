@@ -1,5 +1,4 @@
-import React from 'react';
-import UsersFilters from '../components/UsersFilters';
+
 import CourseCard from '../components/CourseCard';
 import { RiVideoAddFill } from "react-icons/ri";
 import { Link } from 'react-router';
@@ -7,9 +6,8 @@ import { Link } from 'react-router';
 const AdminCoursePage = () => {
   return (
     <div>
-      <UsersFilters />
 
-      <Link className='flex items-center gap-2 border border-blue-600 w-fit p-2 rounded-xl hover:bg-blue-600 hover:text-white transition-all duration-300 ease-in cursor-pointer mb-4' to={'/admin/course/new'}>
+      <Link className='flex items-center gap-2 border border-blue-600 w-fit p-2 rounded-xl hover:bg-blue-600 hover:text-white transition-all duration-300 ease-in cursor-pointer mb-4' to={'/admin/courses/new'}>
         <RiVideoAddFill className='text-xl' /> <span>Add New Course</span>
       </Link>
 
