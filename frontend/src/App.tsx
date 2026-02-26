@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router/dom';
 import HomeLayout from './features/courses/HomeLayout';
 import HomePage from './features/courses/pages/HomePage';
 import MyCoursePage from './features/courses/pages/MyCoursePage';
-import CoursePage from './features/courses/pages/CoursePage';
+import CourseDetailsPage from './features/courses/pages/CourseDetailPage';
 import NotFoundPage from './shared/pages/NotFoundPage';
 import AuthLayout from './features/auth/AuthLayout';
 import LoginPage from './features/auth/pages/LoginPage';
@@ -14,6 +14,8 @@ import UserDetails from './features/admin/pages/UserDetails';
 import AdminCoursePage from './features/courses/pages/AdminCoursePage';
 import AnalyticsPage from './features/admin/pages/AnalyticsPage';
 import CreateCoursePage from './features/courses/pages/CreateCoursePage';
+import SignupPage from './features/auth/pages/SignupPage';
+import OtpVerificationPage from './features/auth/pages/OtpVerificationPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,10 +23,12 @@ const router = createBrowserRouter(
       <Route element={<HomeLayout />}>
         <Route index element={<HomePage />} />
         <Route path='/my-courses' element={<MyCoursePage />} />
-        <Route path='/course/:id' element={<CoursePage />} />
+        <Route path='/course/:id' element={<CourseDetailsPage />} />
       </Route>
       <Route element={<AuthLayout />}>
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<SignupPage />} />
+        <Route path='/verify-email' element={<OtpVerificationPage />} />
       </Route>
       <Route element={<AdminLayout />}>
         <Route path='/admin' element={<DashboardPage />} />

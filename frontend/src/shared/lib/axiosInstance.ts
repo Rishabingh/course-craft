@@ -41,7 +41,7 @@ protectedInstance.interceptors.response.use(
       } catch (error) {
         console.log(error);
         useTokenStore.getState().clearToken();
-        window.location.href = '/login'
+        //window.location.href = '/login'
         return Promise.reject(error);
       }
     }

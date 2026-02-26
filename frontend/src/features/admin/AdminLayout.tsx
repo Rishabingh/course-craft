@@ -5,7 +5,7 @@ import { useUser } from "../../shared/hooks/useUser";
 export default function AdminLayout() {
   const {data, isLoading} = useUser();
   if (isLoading) return <div>Loading...</div>
-  if (data?.role !== 'admin') {
+  if (data?.role !== 'admin' || !data) {
     return <Navigate to={'/'} />
   }
   return (
