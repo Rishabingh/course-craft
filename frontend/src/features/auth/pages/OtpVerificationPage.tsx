@@ -5,6 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { OtpSchema } from "../schema/OtpSchema";
 import type { OtpInput } from "../schema/OtpSchema";
 import { useOtpVerify } from "../hooks/useOtpVerify";
+import { resendOtp } from "../hooks/useResendOtp";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 
 
 const OtpVerificationPage = () => {
@@ -44,9 +47,22 @@ const OtpVerificationPage = () => {
     await mutateAsync(data);
   };
 
-  const handleResend = () => {
-    // Reset timer and trigger your resend API
-    console.log("Resending OTP to", email);
+  const handleResend = async () => {
+    // Reset timer
+    try {
+      if (email) {
+        await resendOtp({email});
+        toast.success('otp resended')
+      } else {
+        toast.error('email is missing, try to signup again on signup page')
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.message)
+      } else {
+        toast.error('something went wrong try to resend otp again or signup again on signup page')
+      }
+    }
     setTimeLeft(300); 
   };
 
