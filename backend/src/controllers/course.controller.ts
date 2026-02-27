@@ -61,17 +61,14 @@ const getCourseController = asyncHandler(async (req, res) => {
 });
 
 const getAllCourseController = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  if (!id) throw new ApiError(400, 'id is required to pass');
-  if (!mongoose.isValidObjectId(id)) throw new ApiError(400, 'invalid course id');
+  const courses = await Course.find().lean();
 
-  let courses: ICourse[] | null;
-  if (req.user?.role === 'admin') {
-    courses = await Course.find().lean();
-  } else {
-    courses = await Course.find({ isPublished: true }).lean();
-  }
-  if (!courses) throw new ApiError(404, 'Course not found');
+  res.status(200).json(new ApiResponse(200, courses, 'course fetch successfully'));
+});
+
+const getAdminCourseController = asyncHandler(async (req, res) => {
+  const courses = await Course.find().lean();
+
   res.status(200).json(new ApiResponse(200, courses, 'course fetch successfully'));
 });
 
@@ -100,4 +97,5 @@ export {
   getCourseController,
   getAllCourseController,
   deleteCourseController,
+  getAdminCourseController,
 };

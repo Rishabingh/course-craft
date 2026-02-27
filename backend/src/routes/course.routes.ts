@@ -4,6 +4,7 @@ import {
   getCourseController,
   getAllCourseController,
   deleteCourseController,
+  getAdminCourseController,
 } from '../controllers/course.controller.js';
 import { verifyAdmin } from '../middlewares/verifyAdmin.middleware.js';
 import { verifyJWTmiddleware } from '../middlewares/verifyJWT.middleware.js';
@@ -14,6 +15,7 @@ import { multerImageUpload } from '../middlewares/multerImage.middleware.js';
 const router = Router();
 
 router.route('/').get(getAllCourseController);
+router.route('/admin').get(verifyJWTmiddleware, verifyAdmin, getAdminCourseController);
 router.route('/:id').get(getCourseController);
 router
   .route('/')

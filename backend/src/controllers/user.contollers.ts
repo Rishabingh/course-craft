@@ -49,9 +49,7 @@ const meCourseController = asyncHandler(async (req, res) => {
     _id: { $in: courseIds },
     isDeleted: false,
     isPublished: true,
-  })
-    .select('-isPublished')
-    .lean();
+  }).lean();
   res.status(200).json(new ApiResponse(200, courses, 'course fetched successfully'));
 });
 
