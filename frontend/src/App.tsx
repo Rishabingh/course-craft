@@ -16,6 +16,7 @@ import AnalyticsPage from './features/admin/pages/AnalyticsPage';
 import CreateCoursePage from './features/courses/pages/CreateCoursePage';
 import SignupPage from './features/auth/pages/SignupPage';
 import OtpVerificationPage from './features/auth/pages/OtpVerificationPage';
+import CourseCurriculumPage from './features/courses/pages/CourseCurriculumPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
         <Route path='/admin/users/:id' element={<UserDetails />} />
         <Route path='/admin/courses' element={<AdminCoursePage />} />
         <Route path='/admin/courses/new' element={<CreateCoursePage />} />
+        <Route path='/admin/courses/curriculum/:id' element={<CourseCurriculumPage />} />
         <Route path='/admin/analytics' element={<AnalyticsPage />} />
       </Route>
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { protectedInstance } from "../../../shared/lib/axiosInstance";
-import type { MyCourseResponse } from "../types/MyCourseResponse";
+import type { MyCourseResponse } from "../types/MyCourseResponses";
 
 const fetchMyCourse = async () => {
   const res = await protectedInstance.get<MyCourseResponse>('/me/courses');

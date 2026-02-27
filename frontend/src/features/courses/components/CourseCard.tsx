@@ -7,10 +7,11 @@ type CourseParams = {
   description: string;
   id: string;
   price: number;
+  link?: string | undefined;
 };
 
 export default function CourseCard({ course }: { course: CourseParams }) {
-  const { title, isEnrolled, image, description, id, price } = course;
+  const { title, isEnrolled, image, description, id, price, link } = course;
   const buttonText = isEnrolled ? 'Continue Learning' : 'View Course';
 
   let priceText = '';
@@ -25,7 +26,7 @@ export default function CourseCard({ course }: { course: CourseParams }) {
   return (
     <Link
       className="max-w-xs w-full flex flex-col gap-3 border border-neutral-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white cursor-pointer hover:bg-neutral-50"
-      to={`/course/${id}`}
+      to={link || `/course/${id}`}
     >
       {/* Image */}
       <div className="aspect-video w-full">

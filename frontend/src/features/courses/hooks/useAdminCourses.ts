@@ -4,16 +4,17 @@ import type { MyCoursesResponse } from '../types/MyCourseResponses';
 
 const fetchCourses = async () => {
   try {
-    const res = await protectedInstance.get<MyCoursesResponse>('/course/');
+    const res = await protectedInstance.get<MyCoursesResponse>('/course/admin');
+    console.log(res)
     return res.data.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const useCourses = () => {
+export const useAdminCourses = () => {
   return useQuery({
-    queryKey: ['courses'],
+    queryKey: ['adminCourses'],
     queryFn: fetchCourses,
     //staleTime: 5 * 60 * 1000,
     initialData: [],
